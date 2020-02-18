@@ -48,6 +48,7 @@ for (f in fls){
 
 }
 
-
+#чистка
+rm(addLine,dr,dupRows,f,fls,folderInput,img,imgG)
 
 
