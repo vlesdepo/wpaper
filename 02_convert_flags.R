@@ -23,3 +23,4 @@ for (f in fls) {
      writeImage(img,paste0(folderOutput,f))
 }
 
+rm(d,f,fls,folderInput,folderOutput,img)
