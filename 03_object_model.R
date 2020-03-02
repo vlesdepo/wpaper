@@ -20,25 +20,18 @@ wall.addBar <- function(wall,x,y,w,h,col){
 }
 
 wall.addRect <- function(wall,dx,dy,dw,dh,db,col){
-        cat(dx,dy,"\n")
-        cat(dx + db,dx + dw - db,"\n")
-        cat(dy + db, dy + dh - db,"\n")
-        
-        t <- imsub(wall, x > (dx + db), x < (dx + dw - db),
-                        y > (dy + db), y < (dy + dh - db))
-        cat(dim(t))
-        cat(dx,dy,"\n")
+
+        t <- wall[(dx+db):(dx + dw - db),(dy + db):(dy + dh - db),,]
         r <- draw_rect(wall,dx,dy,dx+dw,dy+dh,color=col,filled = T)
-        r <- imdraw(r,t,x = (dx + db),
-                        y = (dy + db))
-        
+        r[(dx+db):(dx + dw - db),(dy + db):(dy + dh - db),,] <- t
+
         return(r)
 } 
         
 ######ТЕСТЫ#########
 ww <- wall.create(100,200)
 ww <- wall.clean(ww)
-ww <- wall.addBar(ww,12,12,70,70,col="red")
-ww <- wall.addRect(ww,12,12,70,70,3,col="red")
+ww <- wall.addBar(ww,12,15,70,45,col="red")
+ww <- wall.addRect(ww,12,35,70,45,3,col="green")
 save.image(ww,"test.png")
 ww1 <- imsub(ww, x > 10, x < 75, y > 10, y < 75)
