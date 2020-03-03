@@ -1,6 +1,11 @@
 #библиотеки
 library(imager)
 
+#параметры
+fone <- "Data//a38606.jpg"
+
+
+
 #конструктор
 wall.create <- function(m,n){
      r <- cimg(array(1,c(m,n,1,3)))
@@ -27,9 +32,26 @@ wall.addRect <- function(wall,dx,dy,dw,dh,db,col){
 
         return(r)
 } 
+
+wall.grid.sm <- function() {
+        stX <- 10 #отступ слева
+        stY <- 50 #отступ сверху
+        s <- 10 #ширина между картинами
+        Xgen <- stX+(297+s)*(0:3)
+        Ygen <- stY+(297+s)*(0:3)
+        m <- expand.grid(Xgen,Ygen)
+        return(m)
+}
+
+######скрипт########
+coords <- wall.grid.sm()
+ww <- load.image(fone)
+ww <- wall.addRect(ww,coords$Var1,coords$Var2,297,210,3,"red")
+
+
         
 ######ТЕСТЫ#########
-ww <- wall.create(100,200)
+ww <- wall.create(800,600)
 ww <- wall.clean(ww)
 ww <- wall.addBar(ww,12,15,70,45,col="red")
 ww <- wall.addRect(ww,12,35,70,45,3,col="green")
