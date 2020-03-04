@@ -33,18 +33,20 @@ wall.addRect <- function(wall,dx,dy,dw,dh,db,col){
         return(r)
 } 
 
-wall.grid.sm <- function() {
+wall.grid.mm <- function(sc) {
+        # sc - scale, масштаб
         stX <- 10 #отступ слева
         stY <- 50 #отступ сверху
         s <- 10 #ширина между картинами
         Xgen <- stX+(297+s)*(0:3)
         Ygen <- stY+(297+s)*(0:3)
         m <- expand.grid(Xgen,Ygen)
-        return(m)
+        m <- sapply(m,function(x){x*sc})
+        return(round(m,0))
 }
 
 ######скрипт########
-coords <- wall.grid.sm()
+coords <- wall.grid.mm(800/2500)
 ww <- load.image(fone)
 ww <- wall.addRect(ww,coords$Var1,coords$Var2,297,210,3,"red")
 
