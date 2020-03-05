@@ -29,27 +29,43 @@ wall.addRect <- function(wall,dx,dy,dw,dh,db,col){
         t <- wall[(dx+db):(dx + dw - db),(dy + db):(dy + dh - db),,]
         r <- draw_rect(wall,dx,dy,dx+dw,dy+dh,color=col,filled = T)
         r[(dx+db):(dx + dw - db),(dy + db):(dy + dh - db),,] <- t
-
+        
         return(r)
 } 
 
 wall.grid.mm <- function(sc) {
         # sc - scale, масштаб
-        stX <- 10 #отступ слева
-        stY <- 50 #отступ сверху
+        stX <- 100 #отступ слева
+        stY <- 100 #отступ сверху
         s <- 10 #ширина между картинами
         Xgen <- stX+(297+s)*(0:3)
         Ygen <- stY+(297+s)*(0:3)
         m <- expand.grid(Xgen,Ygen)
         m <- sapply(m,function(x){x*sc})
-        return(round(m,0))
+        m <- round(m,0)
+        m <- as.data.frame(m)
+        m[c(8,11,12,14,15,16),] <- NA
+        m <- na.omit(m)
+        return(m)
+} #исходные данные
+
+wall.scale <-function(x,k=800/2500){
+        r <- round(x*k,0)
+        return(r)
+        
 }
 
 ######скрипт########
 coords <- wall.grid.mm(800/2500)
-ww <- load.image(fone)
-ww <- wall.addRect(ww,coords$Var1,coords$Var2,297,210,3,"red")
 
+ww <- load.image(fone)
+        for (i in (1:nrow(coords))){
+                ww <- wall.addRect(ww,coords[i,1],coords[i,2],wall.scale(297),wall.scale(210),3,"red")
+        }
+                                 
+                                 
+
+save.image(ww,"test.png")
 
         
 ######ТЕСТЫ#########
@@ -59,3 +75,4 @@ ww <- wall.addBar(ww,12,15,70,45,col="red")
 ww <- wall.addRect(ww,12,35,70,45,3,col="green")
 save.image(ww,"test.png")
 ww1 <- imsub(ww, x > 10, x < 75, y > 10, y < 75)
+apply(coords,1,function(x){cat(x[1], x[2],"; \n")})
