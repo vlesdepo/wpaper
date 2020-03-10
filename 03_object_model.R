@@ -3,6 +3,7 @@ library(imager)
 
 #параметры
 fone <- "Data//a38606.jpg"
+pict <- "Data//a38505.jpg"
 
 
 
@@ -37,9 +38,9 @@ wall.grid.mm <- function(sc) {
         # sc - scale, масштаб
         stX <- 100 #отступ слева
         stY <- 100 #отступ сверху
-        s <- 10 #ширина между картинами
+        s <- 100 #ширина между картинами
         Xgen <- stX+(297+s)*(0:3)
-        Ygen <- stY+(297+s)*(0:3)
+        Ygen <- stY+(210+s)*(0:3)
         m <- expand.grid(Xgen,Ygen)
         m <- sapply(m,function(x){x*sc})
         m <- round(m,0)
@@ -55,12 +56,20 @@ wall.scale <-function(x,k=800/2500){
         
 }
 
-######скрипт########
-coords <- wall.grid.mm(800/2500)
+wall.addImg <- function(wall,img,x,y,wx,hy){
+        imt <- resize(im = img,size_x = wx,size_y = hy)
+        r <- imdraw(wall,imt,x,y)
+        return(r)
+}
 
+######скрипт########
+ww <- wall.create(800,600)
+coords <- wall.grid.mm(800/2500)
+flw <- load.image(pict)
 ww <- load.image(fone)
         for (i in (1:nrow(coords))){
-                ww <- wall.addRect(ww,coords[i,1],coords[i,2],wall.scale(297),wall.scale(210),3,"red")
+                ww <- wall.addRect(ww,coords[i,1],coords[i,2],wall.scale(297),wall.scale(210),3,"brown")
+                ww <- wall.addImg(ww,flw,coords[i,1],coords[i,2],wall.scale(297),wall.scale(210))
         }
                                  
                                  
