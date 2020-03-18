@@ -4,6 +4,7 @@ library(imager)
 #параметры
 fone <- "Data//a38606.jpg"
 pict <- "Data//a38505.jpg"
+Hroom <- 2700 #mm
 
 
 
@@ -34,6 +35,25 @@ wall.addRect <- function(wall,dx,dy,dw,dh,db,col){
         return(r)
 } 
 
+wall.addTexture <- function(wall,pic,sc=1){
+        #заполняет wall картинкой pic
+        
+        r <- resize(im = pic,
+                    size_x = round(dim(pic)[1]*sc,0),
+                    size_y = round(dim(pic)[2]*sc,0))
+        newdim <- dim(r)
+        
+        for (m in (1:(round(dim(wall)[1]/newdim[1],0)))) {
+              for (n in (1:(round(dim(wall)[2]/newdim[2],0))))  {
+                      wall <- imdraw(wall,r,(m-1)*newdim[1]+1,(n-1)*newdim[2]+1)
+                      
+              }
+                
+        }
+        return(wall)
+        
+}
+
 wall.grid.mm <- function(sc) {
         # sc - scale, масштаб
         stX <- 100 #отступ слева
@@ -63,9 +83,12 @@ wall.addImg <- function(wall,img,x,y,wx,hy){
 }
 
 ######скрипт########
-ww <- wall.create(800,600)
-coords <- wall.grid.mm(800/2500)
 flw <- load.image(pict)
+back <- load.image(fone)
+ww <- wall.create(800,600)
+ww <- wall.addTexture(ww,back,640/Hroom)
+coords <- wall.grid.mm(800/2500)
+
 ww <- load.image(fone)
         for (i in (1:nrow(coords))){
                 ww <- wall.addRect(ww,coords[i,1],coords[i,2],wall.scale(297),wall.scale(210),3,"brown")
@@ -78,6 +101,7 @@ save.image(ww,"test.png")
 
         
 ######ТЕСТЫ#########
+
 ww <- wall.create(800,600)
 ww <- wall.clean(ww)
 ww <- wall.addBar(ww,12,15,70,45,col="red")
