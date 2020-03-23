@@ -3,7 +3,7 @@ library(imager)
 
 #параметры
 fone <- "Data//a38606.jpg"
-pict <- "Data//a38505.jpg"
+pict <- "Data//a38505 - 2.jpg"
 Hroom <- 2700 #mm
 
 
@@ -82,30 +82,23 @@ wall.addImg <- function(wall,img,x,y,wx,hy){
         return(r)
 }
 
-######скрипт########
+######скрипт 1  вариант -> простое добавление цветных обоев########
 flw <- load.image(pict)
 back <- load.image(fone)
 ww <- wall.create(800,600)
 ww <- wall.addTexture(ww,back,640/Hroom)
 coords <- wall.grid.mm(800/2500)
 
+A4px <- c(round(29.7*(923/106),0),round(21.0*(923/106),0))
 ww <- load.image(fone)
         for (i in (1:nrow(coords))){
+                #выбираем случайные координаты с цветных обоев
+                coord_temp <- c(sample(1:(dim(flw)[1]-A4px[1]),1),sample(1:(dim(flw)[2]-A4px[2]),1)) 
+                flw_temp <- as.cimg(flw[coord_temp[1]:(coord_temp[1]+A4px[1]),coord_temp[2]:(coord_temp[2]+A4px[2]),,])
+                #ставим их на стену
+                ww <- wall.addImg(ww,flw_temp,coords[i,1],coords[i,2],wall.scale(297),wall.scale(210))
                 ww <- wall.addRect(ww,coords[i,1],coords[i,2],wall.scale(297),wall.scale(210),3,"brown")
-                ww <- wall.addImg(ww,flw,coords[i,1],coords[i,2],wall.scale(297),wall.scale(210))
-        }
-                                 
-                                 
-
+                        }
 save.image(ww,"test.png")
 
-        
-######ТЕСТЫ#########
-
-ww <- wall.create(800,600)
-ww <- wall.clean(ww)
-ww <- wall.addBar(ww,12,15,70,45,col="red")
-ww <- wall.addRect(ww,12,35,70,45,3,col="green")
-save.image(ww,"test.png")
-ww1 <- imsub(ww, x > 10, x < 75, y > 10, y < 75)
-apply(coords,1,function(x){cat(x[1], x[2],"; \n")})
+ 
