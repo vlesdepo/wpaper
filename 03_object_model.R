@@ -77,8 +77,14 @@ wall.scale <-function(x,k=800/2500){
 }
 
 wall.addImg <- function(wall,img,x,y,wx,hy,filt,sens=0.5){
- #       t <- wall[(x:(x+wx)),(y:(y+hy)),,]
-        imt <- resize(im = img,size_x = wx,size_y = hy)
+        t <- as.cimg(wall[(x:(x+wx)),(y:(y+hy)),,]) #сохраняем старый фон
+        f <- resize(im = filt,im = img,size_x = wx,size_y = hy) #подводим под размер фильтр
+        
+        imt <- resize(im = img,size_x = wx,size_y = hy) #подводим под размер вставляемую кратинку
+        d <- dim(imt)
+        
+        imt[which(f < sens)] <- t[which(f < sens)]
+        
         r <- imdraw(wall,imt,x,y)
         return(r)
 }
